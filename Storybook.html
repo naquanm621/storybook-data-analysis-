@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Storybook • Building 47 Chiller Plant</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;family=Space+Grotesk:wght@500;600&amp;display=swap');
+        
+        .tail-container { font-family: 'Inter', system_ui, sans-serif; }
+        .title-font { font-family: 'Space Grotesk', sans-serif; }
+        
+        .story-page { transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+        .hero-metric { font-size: 5.5rem; line-height: 1; font-weight: 700; letter-spacing: -0.05em; }
+        
+        .pump-svg { transition: all 0.8s ease; }
+        .amber-pulse { animation: amberPulse 2s infinite; }
+        @keyframes amberPulse {
+            0%, 100% { filter: brightness(1) hue-rotate(0deg); }
+            50% { filter: brightness(1.3) hue-rotate(15deg); }
+        }
+        .narrative { font-size: 1.15rem; line-height: 1.6; }
+        
+        .telemetry-bar {
+            background: linear-gradient(90deg, #eab308 0%, #22d3ee 100%);
+            height: 4px;
+        }
+    </style>
+</head>
+<body class="tail-container bg-zinc-950 text-white min-h-screen">
+    <div class="max-w-5xl mx-auto">
+        <!-- Header -->
+        <div class="flex items-center justify-between px-8 py-6 border-b border-zinc-800">
+            <div class="flex items-center gap-x-3">
+                <div class="w-9 h-9 bg-emerald-500 rounded-2xl flex items-center justify-center text-xl font-bold">📖</div>
+                <div>
+                    <h1 class="title-font text-3xl font-semibold tracking-tight">Data Storybook</h1>
+                    <p class="text-zinc-400 text-sm">Building 47 • Chiller Plant • BACnet/Modbus Live</p>
+                </div>
+            </div>
+            <div class="flex gap-x-6 text-sm">
+                <div onclick="switchPage(0)" class="cursor-pointer px-5 py-2 rounded-3xl hover:bg-zinc-900 flex items-center gap-x-2" id="tab-0"><span class="w-2 h-2 bg-amber-400 rounded-full animate-pulse"></span>Friction Spike</div>
+                <div onclick="switchPage(1)" class="cursor-pointer px-5 py-2 rounded-3xl hover:bg-zinc-900 flex items-center gap-x-2" id="tab-1"><span class="w-2 h-2 bg-emerald-400 rounded-full"></span>Automated Failover</div>
+                <div onclick="switchPage(2)" class="cursor-pointer px-5 py-2 rounded-3xl hover:bg-zinc-900 flex items-center gap-x-2" id="tab-2"><span class="w-2 h-2 bg-sky-400 rounded-full"></span>Fleet Dispatch</div>
+            </div>
+            <div class="px-4 py-2 bg-emerald-900/50 text-emerald-400 text-xs font-mono rounded-3xl flex items-center gap-x-2 border border-emerald-800">
+                <div class="w-2.5 h-2.5 bg-emerald-400 rounded-full animate-pulse"></div>
+                LIVE BACnet • Last Update: <span id="last-update">just now</span>
+            </div>
+        </div>
+
+        <div class="relative h-[calc(100vh-88px)] overflow-hidden">
+            <!-- PAGE 1: Friction Spike -->
+            <div id="page-0" class="story-page absolute inset-0 flex flex-col">
+                <div class="flex-1 flex flex-col">
+                    <div class="px-12 pt-12">
+                        <div class="inline-flex items-center gap-x-3 bg-amber-900/70 text-amber-400 text-sm font-medium tracking-widest px-6 py-3 rounded-3xl">
+                            <i class="fa-solid fa-triangle-exclamation"></i> PAGE 1 • ANOMALY (CHW-P-RPM + CHW-P-TEMP)
+                        </div>
+                        <h2 class="title-font text-6xl font-semibold mt-6">The Friction Spike</h2>
+                        <p class="text-zinc-400 mt-3 text-xl">Primary Chiller Pump B • 3:15 PM</p>
+                    </div>
+                    
+                    <div class="flex-1 flex items-center justify-center px-12">
+                        <div class="text-center">
+                            <svg id="pump1" width="260" height="220" viewBox="0 0 260 220" fill="none" xmlns="http://www.w3.org/2000/svg" class="pump-svg amber-pulse mx-auto">
+                                <rect x="70" y="60" width="120" height="100" rx="12" fill="#eab308" fill-opacity="0.15"/>
+                                <rect x="70" y="60" width="120" height="100" rx="12" stroke="#eab308" stroke-width="18"/>
+                                <circle cx="130" cy="110" r="45" fill="#1f2937" stroke="#eab308" stroke-width="22"/>
+                                <rect x="125" y="45" width="10" height="130" fill="#eab308"/>
+                                <circle cx="130" cy="110" r="22" fill="#eab308"/>
+                            </svg>
+                            <div class="hero-metric text-amber-300 font-mono" id="hero1">4,200 RPM</div>
+                            <div class="text-4xl text-amber-400 mt-1" id="hero1b">185°F</div>
+                            <div class="mt-6 text-amber-400 font-medium flex items-center justify-center gap-x-2">
+                                <i class="fa-solid fa-arrow-trend-up"></i> VIB-X: 0.48 in/s
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-zinc-900 border-t border-zinc-800 px-12 py-10">
+                        <div class="max-w-3xl mx-auto narrative text-zinc-200">
+                            Primary Chiller Pump B (<span class="font-mono">CHW-P-RPM</span> = <span class="text-amber-300">4200</span>, 
+                            <span class="font-mono">CHW-P-TEMP</span> = <span class="text-amber-300">185°F</span>) 
+                            exceeded normal envelope (≤3800 RPM / ≤140°F). Vibration velocity hit 0.48 in/s. 
+                            Risk of bearing failure detected.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PAGE 2: Automated Failover -->
+            <div id="page-1" class="story-page absolute inset-0 flex flex-col hidden">
+                <div class="flex-1 flex flex-col">
+                    <div class="px-12 pt-12">
+                        <div class="inline-flex items-center gap-x-3 bg-emerald-900 text-emerald-400 text-sm font-medium tracking-widest px-6 py-3 rounded-3xl">
+                            <i class="fa-solid fa-shield-halved"></i> PAGE 2 • SYS-FAILOVER-STAT = 1
+                        </div>
+                        <h2 class="title-font text-6xl font-semibold mt-6">Automated Failover</h2>
+                        <p class="text-zinc-400 mt-3 text-xl">Edge Automation • 45ms</p>
+                    </div>
+                    
+                    <div class="flex-1 flex items-center justify-center px-12 gap-16">
+                        <div class="text-center">
+                            <div class="w-36 h-36 bg-red-900/30 border-4 border-red-500 rounded-3xl flex items-center justify-center mb-6">
+                                <i class="fa-solid fa-pump fa-4x text-red-500"></i>
+                            </div>
+                            <div class="hero-metric text-red-400 font-mono" id="hero2a">0 RPM</div>
+                            <div class="text-red-400">Pump B • OFFLINE</div>
+                        </div>
+                        <div class="text-7xl text-zinc-700">→</div>
+                        <div class="text-center">
+                            <div class="w-36 h-36 bg-emerald-900/30 border-4 border-emerald-400 rounded-3xl flex items-center justify-center mb-6 relative">
+                                <i class="fa-solid fa-pump fa-4x text-emerald-400"></i>
+                                <div class="absolute -top-2 -right-2 bg-emerald-400 text-emerald-950 text-xs font-bold px-3 py-1 rounded-2xl">ACTIVE</div>
+                            </div>
+                            <div class="hero-metric text-emerald-300 font-mono" id="hero2b">3,800 RPM</div>
+                            <div class="text-emerald-400">Pump C • RUNNING</div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-zinc-900 border-t border-zinc-800 px-12 py-10">
+                        <div class="max-w-3xl mx-auto narrative text-zinc-200">
+                            <span class="font-mono">SYS-FAILOVER-STAT</span> triggered. Pump B spun down safely. 
+                            Load transferred to Pump C (<span class="font-mono">CHW-P-RPM</span> = 3800). 
+                            No interruption to chilled water supply.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PAGE 3: Work Order -->
+            <div id="page-2" class="story-page absolute inset-0 flex flex-col hidden">
+                <div class="flex-1 flex flex-col">
+                    <div class="px-12 pt-12">
+                        <div class="inline-flex items-center gap-x-3 bg-sky-900 text-sky-400 text-sm font-medium tracking-widest px-6 py-3 rounded-3xl">
+                            <i class="fa-solid fa-truck"></i> PAGE 3 • CMMS INTEGRATION
+                        </div>
+                        <h2 class="title-font text-6xl font-semibold mt-6">Work Order &amp; Dispatch</h2>
+                        <p class="text-zinc-400 mt-3 text-xl">Ticket #9042 • ETA 14 min</p>
+                    </div>
+                    
+                    <div class="flex-1 flex items-center justify-center px-12">
+                        <div class="text-center">
+                            <div class="mb-8">
+                                <svg width="160" height="140" viewBox="0 0 160 140" fill="none" xmlns="http://www.w3.org/2000/svg" class="mx-auto">
+                                    <rect x="25" y="70" width="95" height="38" rx="8" fill="#22d3ee" fill-opacity="0.15"/>
+                                    <rect x="25" y="70" width="95" height="38" rx="8" stroke="#22d3ee" stroke-width="14"/>
+                                    <circle cx="52" cy="115" r="19" fill="#1e2937" stroke="#22d3ee" stroke-width="12"/>
+                                    <circle cx="112" cy="115" r="19" fill="#1e2937" stroke="#22d3ee" stroke-width="12"/>
+                                    <path d="M120 70 L140 70 L150 85 L150 105 L120 105 Z" fill="#22d3ee" fill-opacity="0.25" stroke="#22d3ee" stroke-width="12"/>
+                                </svg>
+                            </div>
+                            <div class="hero-metric text-sky-300 font-mono">ETA 14 MIN</div>
+                            <div class="text-4xl font-semibold text-sky-400 mt-2">#9042</div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-zinc-900 border-t border-zinc-800 px-12 py-10">
+                        <div class="max-w-3xl mx-auto narrative text-zinc-200">
+                            Automated CMMS ticket #9042 created with full telemetry snapshot 
+                            (<span class="font-mono">CHW-P-TEMP</span>, <span class="font-mono">CHW-VIB-X</span>, etc.). 
+                            Technician T-47 dispatched with bearings/seals kit. Pump C holding steady.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Telemetry Footer -->
+        <div class="fixed bottom-0 left-0 right-0 bg-zinc-900 border-t border-zinc-700 py-3 px-8 text-xs font-mono flex items-center justify-between text-zinc-400">
+            <div>CHW-P-RPM: <span id="live-rpm" class="text-amber-300">4200</span> | CHW-P-TEMP: <span id="live-temp" class="text-amber-300">185°F</span> | VIB-X: 0.48 in/s</div>
+            <div class="text-emerald-400">Connected to FIN Framework edge layer • LBNL FDD validated thresholds</div>
+            <button onclick="simulateUpdate()" class="text-sky-400 hover:text-white">Simulate Next State →</button>
+        </div>
+    </div>
+
+    <script>
+        let currentPage = 0;
+        const pages = 3;
+        
+        function switchPage(n) {
+            currentPage = n;
+            for (let i = 0; i < pages; i++) {
+                document.getElementById(`page-${i}`).classList.toggle('hidden', i !== n);
+                const tab = document.getElementById(`tab-${i}`);
+                if (tab) tab.classList.toggle('bg-zinc-800', i === n);
+            }
+        }
+        
+        function nextPage() {
+            switchPage((currentPage + 1) % pages);
+        }
+        
+        function simulateUpdate() {
+            const rpmEl = document.getElementById('live-rpm');
+            const tempEl = document.getElementById('live-temp');
+            const hero1 = document.getElementById('hero1');
+            
+            if (currentPage === 0) {
+                hero1.textContent = "0 RPM";
+                rpmEl.textContent = "0";
+                tempEl.textContent = "92°F";
+                nextPage(); // Auto advance on simulation
+            } else if (currentPage === 1) {
+                nextPage();
+            }
+            document.getElementById('last-update').textContent = 'just now';
+        }
+        
+        document.addEventListener('keydown', e => {
+            if (e.key === "ArrowRight") nextPage();
+            if (e.key === "ArrowLeft") switchPage((currentPage - 1 + pages) % pages);
+        });
+        
+        window.onload = () => switchPage(0);
+    </script>
+</body>
+</html>
